@@ -1,0 +1,7 @@
+{
+    "custom": {
+        "run": "run",
+        "custom": "custom"
+    },
+    "modules": ["foo", "bar"]
+}

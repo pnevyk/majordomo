@@ -1,0 +1,6 @@
+{
+    "custom": {
+        "command": "command"
+    },
+    "test": "test"
+}

@@ -1,0 +1,42 @@
+{
+  "name": "majordomo",
+  "author": "Petr Nevyhoštěný <petr.nevyhosteny@gmail.com>",
+  "version": "0.1.0",
+  "description": "Command line utility which embraces a set of tools like git, npm, bower and so on",
+  "bin": {
+    "majordomo": "./bin/majordomo.js"
+  },
+  "main": "lib/majordomo.js",
+  "scripts": {
+    "prepublish": "coffee --bare --compile --output lib/ src/",
+    "pretest": "coffee --bare --compile --output lib/ src/",
+    "test": "mocha test/cli/spec.js test/majordomo/spec.js test/majorfile/spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nevyk/majordomo"
+  },
+  "keywords": [
+    "command",
+    "line",
+    "majordomo",
+    "git",
+    "npm",
+    "bower"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nevyk/majordomo/issues"
+  },
+  "homepage": "https://github.com/nevyk/majordomo",
+  "dependencies": {
+    "inquirer": "^0.6.0",
+    "lodash": "^2.4.1",
+    "mustache": "^0.8.2"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.8.0",
+    "expect.js": "^0.3.1",
+    "mocha": "^1.21.4"
+  }
+}
