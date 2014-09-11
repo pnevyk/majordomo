@@ -4,7 +4,7 @@
   "version": "0.1.1",
   "description": "Command line utility which embraces a set of tools like git, npm, bower and so on",
   "bin": {
-    "majordomo": "./bin/majordomo.js"
+    "majordomo": "./bin/index.js"
   },
   "main": "lib/majordomo.js",
   "scripts": {
