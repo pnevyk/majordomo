@@ -315,7 +315,12 @@ module.exports.exec = (command, cb = (->)) ->
 read = (filepath) ->
     # This is very tricky and probably bad solution
     # NOTE: Is there any other possibility how to manage that?
-    filepath = path.join path.dirname(module.parent.children[2].filename), filepath
+    if module.parent.children[2]
+        filename = module.parent.children[2].filename
+    else
+        filename = module.parent.filename
+        
+    filepath = path.join path.dirname(filename), filepath
     fs.readFileSync(filepath).toString()
 
 module.exports.read = (filepath) ->
