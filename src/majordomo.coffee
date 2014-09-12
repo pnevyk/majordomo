@@ -6,6 +6,8 @@ mustache = require 'mustache'
 _ = require 'lodash'
 majorfile = require('./majorfile')()
 
+debugMode = false
+
 # === Helpers ===
 
 # = Inquirer objects =
@@ -131,6 +133,10 @@ log = (command, param) ->
     
     else
         console.log "[\x1b[32mMajordomo\x1b[0m] #{command}\x1b[0m"
+        
+debug = (message) ->
+    if debugMode
+        console.log "[\x1b[33mMajordomo --debug\x1b[0m] #{message}"
     
 
 # === Executor ===
@@ -300,13 +306,18 @@ module.exports = (name, config = { modules : [] }) ->
 # Exec
 executor = new Executor()
 module.exports.exec = (command, cb = (->)) ->
+    if debugMode
+        return debug "executing #{command}"
+
     executor.execute command, cb
 
 # Read
 read = (filepath) ->
     fs.readFileSync(path.join path.dirname(module.parent.filename), filepath).toString()
 
-module.exports.read = read
+module.exports.read = (filepath) ->
+    debug "reading #{filepath}"
+    read filepath
     
 # Write
 module.exports.write = (filepath, content) ->
@@ -316,6 +327,8 @@ module.exports.write = (filepath, content) ->
     
 # Template
 module.exports.template = (filepath, data) ->
+    debug "templating #{filepath}"
+    debug "template data: \n#{data}"
     template = read filepath
     mustache.render template, data    
 
@@ -327,3 +340,8 @@ module.exports.mkdir = (filepath) ->
     
 # Log
 module.exports.log = log
+
+module.exports.debug = debug
+
+module.exports.debugMode = (value) ->
+    debugMode = value
