@@ -313,7 +313,10 @@ module.exports.exec = (command, cb = (->)) ->
 
 # Read
 read = (filepath) ->
-    fs.readFileSync(path.join path.dirname(module.parent.filename), filepath).toString()
+    # This is very tricky and probably bad solution
+    # NOTE: Is there any other possibility how to manage that?
+    filepath = path.join path.dirname(module.parent.children[2].filename), filepath
+    fs.readFileSync(filepath).toString()
 
 module.exports.read = (filepath) ->
     debug "reading #{filepath}"
