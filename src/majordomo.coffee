@@ -1,6 +1,5 @@
 fs = require 'fs'
 path = require 'path'
-exec = require('child_process').exec
 inquirer = require 'inquirer'
 _ = require 'lodash'
 majorfile = require('./majorfile')()

@@ -1,5 +1,6 @@
 path = require 'path'
 fs = require 'fs'
+exec = require('child_process').exec
 mustache = require 'mustache'
 
 debugMode = false
