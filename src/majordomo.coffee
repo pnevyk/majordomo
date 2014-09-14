@@ -5,8 +5,6 @@ _ = require 'lodash'
 majorfile = require('./majorfile')()
 util = require './util'
 
-debugMode = false
-
 # === Helpers ===
 
 # = Inquirer objects =
