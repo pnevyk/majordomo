@@ -2,9 +2,9 @@ fs = require 'fs'
 path = require 'path'
 exec = require('child_process').exec
 inquirer = require 'inquirer'
-mustache = require 'mustache'
 _ = require 'lodash'
 majorfile = require('./majorfile')()
+util = require './util'
 
 debugMode = false
 
@@ -59,113 +59,6 @@ password = (id, question, def) ->
     result['default'] = def if def?
     result
     
-    
-# = Condition transformer =
-
-###
-condition
----------
-list -> 'id.choice' or '!id.choice'
-checkbox -> 'id:choice' or '!id:choice'
-input/password/setter -> 'id=value' or 'id!=value'
-confirm -> 'id' or '!id'
-has module -> '%module' or '%!module'
-###
-transformCondition = (condition, branch) ->
-    if condition[0] isnt '%'
-        if condition[0] isnt '!'
-            if condition.indexOf('.') isnt -1
-                condition = condition.split '.'
-                () ->
-                    @get(condition[0]) is condition[1]
-                    
-            else if condition.indexOf(':') isnt -1
-                condition = condition.split ':'
-                () ->
-                    @get(condition[0]).indexOf(condition[1]) isnt -1
-                    
-            else if condition.indexOf('!=') isnt -1
-                condition = condition.split '!='
-                () ->
-                    @get(condition[0]) isnt condition[1]
-                    
-            else if condition.indexOf('=') isnt -1
-                condition = condition.split '='
-                () ->
-                    @get(condition[0]) is condition[1]
-                    
-            else
-                () ->
-                    @get condition
-        else
-            condition = condition.substring 1
-            if condition.indexOf('.') isnt -1
-                condition = condition.split '.'
-                () ->
-                    @get(condition[0]) isnt condition[1]
-                    
-            else if condition.indexOf(':') isnt -1
-                condition = condition.split ':'
-                () ->
-                    @get(condition[0]).indexOf(condition[1]) is -1
-                    
-            else
-                () ->
-                    not @get condition 
-                    
-    else
-        if condition[1] isnt '!'
-            condition = condition.substring 1
-            () ->
-                @has condition
-                
-        else
-            condition = condition.substring 2
-            () ->
-                not @has condition
-
-
-# = Logger =
-
-log = (command, param) ->
-    if param?
-        console.log "[\x1b[32mMajordomo\x1b[0m] #{command}: \x1b[34m#{param}\x1b[0m"
-    
-    else
-        console.log "[\x1b[32mMajordomo\x1b[0m] #{command}\x1b[0m"
-        
-debug = (message) ->
-    if debugMode
-        console.log "[\x1b[33mMajordomo --debug\x1b[0m] #{message}"
-    
-
-# === Executor ===
-
-class Executor
-    constructor: ->
-        @queue = []
-        @locked = false
-        
-    log: (command) ->
-        log 'executes', command
-        
-    dequeue: ->
-        if @queue.length isnt 0 and not @locked
-            @locked = true
-            toExecute = @queue.shift()
-            @log toExecute.command
-            exec toExecute.command, (error, stdout, stderr) =>
-                toExecute.callback(error, stdout, stderr)
-                @locked = false
-                @dequeue()
-        
-    execute: (command, cb) ->
-        @queue.push(
-            command: command,
-            callback: cb
-        )
-        @dequeue()
-
 
 # === Branch ===
 
@@ -218,7 +111,7 @@ class Branch
     branch: (condition, branch) ->
         if typeof condition is 'string'
             #transform condition
-            condition = transformCondition condition, this
+            condition = util.transformCondition condition, this
         
         _condition = @condition
         inherited = () ->
@@ -304,52 +197,30 @@ module.exports = (name, config = { modules : [] }) ->
     pipeline.init()
 
 # Exec
-executor = new Executor()
+executor = new util.Executor()
 module.exports.exec = (command, cb = (->)) ->
-    if debugMode
-        return debug "executing #{command}"
-
     executor.execute command, cb
-
-# Read
-read = (filepath) ->
+    
+module.exports.src = (() ->
     # This is very tricky and probably bad solution
     # NOTE: Is there any other possibility how to manage that?
     if module.parent.children[2]
         filename = module.parent.children[2].filename
     else
         filename = module.parent.filename
-        
-    filepath = path.join path.dirname(filename), filepath
-    fs.readFileSync(filepath).toString()
 
-module.exports.read = (filepath) ->
-    debug "reading #{filepath}"
-    read filepath
-    
-# Write
-module.exports.write = (filepath, content) ->
-    filepath = path.join process.cwd(), filepath
-    log 'writes', filepath
-    fs.writeFileSync filepath, content
-    
-# Template
-module.exports.template = (filepath, data) ->
-    debug "templating #{filepath}"
-    debug "template data: \n#{data}"
-    template = read filepath
-    mustache.render template, data    
+    new util.FileSystem path.dirname filename
+)()
 
-# Mkdir
-module.exports.mkdir = (filepath) ->
-    filepath = path.join process.cwd(), filepath
-    log 'makes directory', filepath
-    fs.mkdirSync filepath
-    
-# Log
-module.exports.log = log
+dest = null
+Object.defineProperty module.exports, 'dest', (
+    get : () ->
+        return dest if dest
+        dest = new util.FileSystem process.cwd()
+    )
 
-module.exports.debug = debug
+module.exports.template = util.template
 
-module.exports.debugMode = (value) ->
-    debugMode = value
+module.exports.log = util.log
+module.exports.debug = util.debug
+module.exports.setDebugMode = util.setDebugMode

@@ -1,7 +1,6 @@
 /*global describe, it, before, after*/
 
 var path = require('path');
-var fs = require('fs');
 var majordomo = require(path.join(__dirname, '../../lib/majordomo.js'));
 var expect = require('expect.js');
 
@@ -209,69 +208,25 @@ describe('Majordomo', function () {
     });
     
     describe('=== Majordomo API ===', function () {
-        describe('- executing command', function () {
-            //
+        describe('- src', function () {
+            it('should operate on files in directory where the script is located', function () {
+                expect(majordomo.src.exists('spec.js')).to.be(true);
+            });
         });
         
-        describe('- writing file', function () {
+        describe('- dest', function () {
             before(function () {
                 try {
-                    process.chdir(__dirname);
+                    process.chdir(path.join(__dirname, '..'));
                 }
                 
                 catch (err) {
-                    throw new Error('Cannot change working directory to test majordomo.write because of this error: ', err.message);
+                    console.log('Cannot change current working directory to test Majorodmo because of this error:', err.message);
                 }
             });
             
-            it('should write a file relative to current working directory', function () {
-                majordomo.write('foo.txt', 'Hello world!');
-                
-                expect(fs.existsSync(__dirname + '/foo.txt')).to.be(true);
-                expect(fs.readFileSync(__dirname + '/foo.txt').toString()).to.be('Hello world!');
-            });
-            
-            after(function () {
-                fs.unlinkSync(__dirname + '/foo.txt');
-            });
-        });
-        
-        describe('- making directory', function () {
-            before(function () {
-                try {
-                    process.chdir(__dirname);
-                }
-                
-                catch (err) {
-                    throw new Error('Cannot change working directory to test majordomo.write because of this error: ', err.message);
-                }
-            });
-            
-            it('should make a directory relative to current working directory', function () {
-                majordomo.mkdir('bar');
-                
-                expect(fs.existsSync(__dirname + '/bar')).to.be(true);
-            });
-            
-            after(function () {
-                fs.rmdirSync(__dirname + '/bar');
-            });
-        });
-        
-        describe('- reading file', function () {
-            it('should read content of a file relative to current working directory', function () {
-                expect(majordomo.read('template.json')).to.be('{\n    "{{property}}": "{{value}}"\n}');
-            });
-        });
-        
-        describe('- templates', function () {
-            it('should render template with given data', function () {
-                var data = {
-                    property: 'foo',
-                    value: 'bar'
-                };
-                
-                expect(majordomo.template('template.json', data)).to.be('{\n    "foo": "bar"\n}');
+            it('should operate on files in directory where the script is executed', function () {
+                expect(majordomo.dest.exists('majordomo/spec.js')).to.be(true);
             });
         });
     });
