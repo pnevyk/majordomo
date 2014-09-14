@@ -1,12 +1,12 @@
 # Majordomo
 
-Are you tired of typing a lot of commands if you want to just push repo to GitHub and publish package to npm registry? Or you can't remember those options of command line tools? Majordomo and its [commands](#commands) are solution of your problem. It embraces a few of tools you use into powerful commands. Just type `majordomo <command>`, maybe answer some questions, and see the result.
+Majordomo is a command line utility which provides a set of [commands](#commands) which help you to do common things in a comfortable way (user friendly prompts, one majorodomo command results in multiple other commands, ...). Just type `majordomo <command>`, maybe answer some questions, and see the result.
 
-The power of Majordomo is in modules. You can specify what parts of command you want to use. For example you are writing npm package so you don't want to publish it to bower registry.
+The power of Majordomo is in modules. You can specify what parts of command you want to use. For example if you are writing just npm package, you don't want to publish it to bower registry.
 
 ### Work in progress
 
-Majordomo is in early development now. It works but it can behave unexpectly and API may change.
+Majordomo is in early development now. It works somehow but it can behave unexpectly and API may change.
 
 ## Installation
 
@@ -31,6 +31,7 @@ __.majorfile:__
     }
 }
 ```
+__terminal:__
 
 ```bash
 $ majordomo foo +qux -baz
@@ -85,7 +86,7 @@ Overwrites default modules for individual commands.
 
 ### Writing a command
 
-Always name your npm packages as `major-<your-command>`. Tell us if you have written a command and you want to add the command link here.
+Always name your npm packages as `major-<your-command>`. Tell me if you have written a command and you want to add the command link here.
 
 First, initiate command using `majordomo` function. You have to pass name of the command and configuration which is sent from `majordomo` command line utility.
 
@@ -145,11 +146,11 @@ run(function () {
 ##### branch(condition, branch)
 
 - __condition__ - It can be either function or string. Function must return boolean value whether branch will be executed or not. Use `this.get(property)` and `this.has(module)` for your decisions. You can use majordomo shortcuts for condition by passing a string with a specified format.
-    - `'property.value'`/`'!property.value'` - transforms to function which returns `property === value`/`property !== value`
-    - `'property:value'`/`'!property:value'` - transforms to function which returns `property.indexOf(value) !== -1`/`property.indexOf(value) === -1`
-    - `'property=value'`/`'property!=value'` - transforms to function which returns `property === value`/`property !== value`
+    - `'property.value'`/`'!property.value'` -> `this.get(property) === value`/`this.get(property) !== value`
+    - `'property:value'`/`'!property:value'` -> `this.get(property).indexOf(value) !== -1`/`this.get(property).indexOf(value) === -1`
+    - `'property=value'`/`'property!=value'` -> `this.get(property) === value`/`this.get(property) !== value`
     - `'property'`/`'!property'` - checks if property is present
-    - `'%module'`/`'%!module'` - checks whether command has module or not
+    - `'%module'`/`'%!module'` - checks whether user want to run commands related to specified module
 - __branch__ - Function which will be executed if condition is truthy. Command API is binded to `this`.
 
 ##### run(action)
@@ -177,36 +178,75 @@ Majordomo object provides you some useful functions which you can use in your co
 
 ##### exec(command, [cb])
 
-It embraces Node `child_process.exec` but gives you possibility to execute commands in a synchronous way. It means that `majorodomo.exec` doesn't execute command until previous is finished.
+It embraces Node `child_process.exec` but gives you possibility to execute commands in a pseudo-synchronous way. It means that `majorodomo.exec` doesn't execute command until previous is finished.
 
 ```js
 majorodomo.exec('git tag -a v1.0.0', function (error, output) {
     if (!error) console.log(output);
 });
 
-//this command isn't executed until previous is finished
+//this command isn't executed until previous has finished
 majordomo.exec('npm publish ./');
 ```
 
+##### template(template, data)
+
+Renders a [mustache](http://mustache.github.io/) template.
+
+##### log(name, [message])
+
+Logs a message in Majordomo look.
+
+##### debug(name, [message])
+
+Logs a message in Majorodmo "debug" look. If debug mode is disabled (default), it does nothing.
+
+##### setDebugMode()
+
+Enables debug mode.
+
+##### src
+
+Instance of [FileSystem](#filesystem_api) which root directory is where your command is located (your package).
+
+##### dest
+
+Instance of [FileSystem](#filesystem_api) which root directory is user's working directory.
+
+<a name="filesystem_api"></a>
+#### FileSystem API
+
+##### exists(path)
+
+Returns if file/directory exists.
+
 ##### read(path)
 
-It reads a file at specified path synchronously relative to command directory.
+Returns the content of file.
 
 ##### write(path, content)
 
-It writes to a file at specified path synchronously relative to current working directory (where majordomo was executed).
+Writes content to specified file.
+
+##### remove(path)
+
+Removes specified file.
 
 ##### mkdir(path)
 
-It makes a directory at specified path synchronously relative to current working directory (where majordomo was executed).
+Makes directory.
 
-##### template(path, data)
+##### rmdir(path)
 
-It renders a [mustache](http://mustache.github.io/) template (path is relative to command directory).
+Removes directory.
 
-##### log(action, [param])
+##### list(path)
 
-It logs a message in Majordomo look.
+Returns array of files in specified directory.
+
+##### chmod(path, mode)
+
+Changes mode of specified file.
 
 ## Todo
 
