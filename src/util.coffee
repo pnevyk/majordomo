@@ -107,7 +107,7 @@ class Executor
         
     execute: (command, cb) ->
         debug 'execute', command
-        return if debugMode
+        return cb null, '', '' if debugMode
         @queue.push(
             command: command,
             callback: cb
