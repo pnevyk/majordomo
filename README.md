@@ -84,6 +84,14 @@ Overwrites default modules for individual commands.
 <a name="commands"></a>
 ## Commands
 
+#### [init](https://github.com/nevyk/major-init)
+
+Majordomo command for initialization of a project.
+
+#### [release](https://github.com/nevyk/major-release)
+
+Majordomo command to help to release new version of your project.
+
 ### Writing a command
 
 Always name your npm packages as `major-<your-command>`. Tell me if you have written a command and you want to add the command link here.
