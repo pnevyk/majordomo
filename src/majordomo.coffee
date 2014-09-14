@@ -201,16 +201,21 @@ executor = new util.Executor()
 module.exports.exec = (command, cb = (->)) ->
     executor.execute command, cb
     
-module.exports.src = (() ->
-    # This is very tricky and probably bad solution
-    # NOTE: Is there any other possibility how to manage that?
-    if module.parent.children[2]
-        filename = module.parent.children[2].filename
-    else
-        filename = module.parent.filename
-
-    new util.FileSystem path.dirname filename
-)()
+src = null
+Object.defineProperty module.exports, 'src', (
+    get : () ->
+        return src if src
+        src = (() ->
+            # This is very tricky and probably bad solution
+            # NOTE: Is there any other possibility how to manage that?
+            if module.parent.children[2]
+                filename = module.parent.children[2].filename
+            else
+                filename = module.parent.filename
+        
+            new util.FileSystem path.dirname filename
+        )()
+    )
 
 dest = null
 Object.defineProperty module.exports, 'dest', (
