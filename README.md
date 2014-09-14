@@ -98,7 +98,7 @@ module.exports = function (config) {
 }
 ```
 
-Then use [Command API](#command_api) API for asking some questions.
+Then use [Command API](#command_api) for asking some questions.
 
 ```js
 majordomo('name', config).
