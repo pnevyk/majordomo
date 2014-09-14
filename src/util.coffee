@@ -127,7 +127,7 @@ class FileSystem
     
     read: (filepath) ->
         filepath = path.join @root, filepath
-        debug 'write', filepath
+        debug 'read', filepath
         return '' if debugMode
         fs.readFileSync(filepath).toString()
         
