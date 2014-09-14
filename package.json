@@ -1,7 +1,7 @@
 {
   "name": "majordomo",
   "author": "Petr Nevyhoštěný <petr.nevyhosteny@gmail.com>",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Command line utility which embraces a set of tools like git, npm, bower and so on",
   "bin": {
     "majordomo": "./bin/index.js"

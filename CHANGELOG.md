@@ -1,5 +1,9 @@
 # Majoromo changelog
 
+## 0.1.5
+
+- fix `majordomo.src` bug (wrong root path when used in terminal)
+
 ## 0.1.4
 
 - create util for better code design
