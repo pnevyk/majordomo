@@ -1,6 +1,6 @@
 # Majordomo
 
-Majordomo is a command line utility which provides a set of [commands](#commands) which help you to do common things in a comfortable way (user friendly prompts, one majorodomo command results in multiple other commands, ...). Just type `majordomo <command>`, maybe answer some questions, and see the result.
+Majordomo is a command line utility which provides a set of [commands](#commands_list) which help you to do common things in a comfortable way (user friendly prompts, one majorodomo command results in multiple other commands, ...). Just type `majordomo <command>`, maybe answer some questions, and see the result.
 
 The power of Majordomo is in modules. You can specify what parts of command you want to use. For example if you are writing just npm package, you don't want to publish it to bower registry.
 
@@ -81,7 +81,7 @@ Overwrites default modules for individual commands.
 }
 ```
 
-<a name="commands"></a>
+<a name="commands_list"></a>
 ## Commands
 
 #### [init](https://github.com/nevyk/major-init)
