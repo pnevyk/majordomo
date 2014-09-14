@@ -88,6 +88,10 @@ Overwrites default modules for individual commands.
 
 Majordomo command for initialization of a project.
 
+#### [commit](https://github.com/nevyk/major-commit)
+
+Majordomo command for git commiting in a more comfortable way.
+
 #### [release](https://github.com/nevyk/major-release)
 
 Majordomo command to help to release new version of your project.
