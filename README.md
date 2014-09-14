@@ -256,7 +256,7 @@ Changes mode of specified file.
 - Add more tests
 - Add asynchronous operations support
 
-## Thank you to
+## Thank you
 
 - [Inquirer.js](https://github.com/SBoudrias/Inquirer.js) for awesome CLI prompts which Majorodomo just embraces
 - [Lo-dash](http://lodash.com/) for useful utility belt
