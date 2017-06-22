@@ -273,7 +273,7 @@ Changes mode of specified file.
 - [Inquirer.js](https://github.com/SBoudrias/Inquirer.js) for awesome CLI prompts which Majorodomo just embraces
 - [Lo-dash](http://lodash.com/) for useful utility belt
 - [Mustache.js](https://github.com/janl/mustache.js/) for nice implementation of Mustache templates
-- [Mocha](http://visionmedia.github.io/mocha/) and [expect.js](https://github.com/LearnBoost/expect.js) because I really enjoy writing tests with them
+- [Mocha](http://mochajs.org/) and [expect.js](https://github.com/LearnBoost/expect.js) because I really enjoy writing tests with them
 - [Coffeescript](http://coffeescript.org/) because writing JavaScript is fast and beautiful with it
 
 ## License
